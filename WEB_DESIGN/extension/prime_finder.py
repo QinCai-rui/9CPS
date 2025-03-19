@@ -1,4 +1,5 @@
 import sys
+from multiprocessing import Pool, cpu_count
 
 def is_prime(n):
     if n <= 1:
@@ -16,13 +17,11 @@ def is_prime(n):
     
     return True
 
-def find_primes(limit):
-    ordinal = 1
-    primes = []
-    for n in range(2, limit + 1):
-        if is_prime(n):
-            primes.append(f'Prime {ordinal} is {n}')
-            ordinal += 1
+def find_primes_parallel(limit):
+    with Pool(cpu_count()) as pool:
+        numbers = range(2, limit + 1)
+        results = pool.map(is_prime, numbers)
+    primes = [n for n, is_prime_flag in zip(numbers, results) if is_prime_flag]
     return primes
 
 if __name__ == "__main__":
@@ -30,6 +29,13 @@ if __name__ == "__main__":
     #
     # primes = find_primes(UP_TO)
     #print(f"Primes up to {UP_TO}: {primes}")
-
-    test_number = int(sys.argv[1]) if len(sys.argv) > 1 else int(input("enter a number to check if it's prime: "))
-    print(f"Is {test_number} prime? {is_prime(test_number)}")
+    try:
+        if len(sys.argv) > 1:
+            test_number = int(sys.argv[1])
+            print(f"Is {test_number} prime? {is_prime(test_number)}")
+        else:
+            limit = int(input("Enter a limit to find primes up to: ").strip())
+            primes = find_primes_parallel(limit)
+            print(f"Primes up to {limit}: {primes}")
+    except ValueError:
+        print("Invalid input. Please enter a valid integer.")
