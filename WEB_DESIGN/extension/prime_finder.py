@@ -2,22 +2,24 @@ import sys
 from multiprocessing import Pool, cpu_count
 
 def is_prime(n):
+    """Prime checking function using 6k +/- 1 rule"""
     if n <= 1:
         return False
     elif n <= 3:
         return True
     elif n % 2 == 0 or n % 3 == 0:
         return False
-    
+
     i = 5
     while i * i <= n:
         if n % i == 0 or n % (i + 2) == 0:
             return False
         i += 6
-    
+
     return True
 
 def find_primes_parallel(limit):
+    """Find all prime numbers up to a given limit using multiple processes"""
     with Pool(cpu_count()) as pool:
         numbers = range(2, limit + 1)
         results = pool.map(is_prime, numbers)
