@@ -27,10 +27,6 @@ def find_primes_parallel(limit):
     return primes
 
 if __name__ == "__main__":
-    #UP_TO = 100
-    #
-    # primes = find_primes(UP_TO)
-    #print(f"Primes up to {UP_TO}: {primes}")
     try:
         if len(sys.argv) > 1:
             test_number = int(sys.argv[1])
